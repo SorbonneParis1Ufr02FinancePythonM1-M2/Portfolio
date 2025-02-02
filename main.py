@@ -22,7 +22,7 @@ def main():
     port_standard_dev = portfolio_standard_dev(weights, data)
 
     # 3. Display the results
-    display_chart(daily_cum_ret, "Portfolio")
+    display_chart(daily_cum_ret)
     display_results(port_return, port_variance, port_standard_dev)
 
 

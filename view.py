@@ -1,12 +1,22 @@
+from typing import Dict
+
 import matplotlib
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
+from repository import get_config
 
-def display_chart(data: pd.DataFrame, column: str, color="purple") -> None:
+
+def display_chart(data: pd.DataFrame) -> None:
+    config: Dict = get_config()
     fig, ax = plt.subplots()
-    ax.plot(data.index, data[column], color=color, label=column)
+    ax.plot(
+        data.index,
+        data[config["chart"]["column"]],
+        color=config["chart"]["color"],
+        label=config["chart"]["label"],
+    )
     ax.xaxis.set_major_locator(matplotlib.dates.YearLocator())
     plt.legend()
     plt.show()
@@ -17,6 +27,7 @@ def display_results(
     portfolio_variance: np.float64,
     portfolio_standard_dev: np.float64,
 ) -> None:
-    print(f"port_return={portfolio_return}")
-    print(f"portfolio variance={str(np.round(portfolio_variance, 4) * 100)}%")
-    print(f"portfolio std={str(np.round(portfolio_standard_dev, 4) * 100)}%")
+    config: Dict = get_config()
+    print(f"{config["view"]["return"]}={portfolio_return}")
+    print(f"{config["view"]["variance"]}={str(np.round(portfolio_variance, config["view"]["rounding"]) * 100)}%")
+    print(f"{config["view"]["std"]}={str(np.round(portfolio_standard_dev, config["view"]["rounding"]) * 100)}%")
