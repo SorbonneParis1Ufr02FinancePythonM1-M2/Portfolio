@@ -2,6 +2,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
+from model import (
+    portfolio_return,
+    portfolio_variance,
+    portfolio_standard_dev,
+    portfolio_cumulative_returns,
+)
 from repository import get_data, get_weights
 
 
@@ -10,42 +16,14 @@ def main():
 
     # 1. Get data
     data = get_data()
-
-    # Define weights for the portfolio
     weights = get_weights()
 
     # --------------------------------------------------------------------------------
     # 2. Process the data
-
-    # Calculate percentage returns
-    returns = data.pct_change()
-
-    # Calculate individual mean returns
-    mean_daily_returns = returns.mean()
-
-    # Calculate expected portfolio performance
-    port_return = np.sum(mean_daily_returns * weights)
-
-    # https: // campus.datacamp.com / courses / introduction - to - portfolio - analysis - in -python / introduction - to - portfolio - analysis?ex = 7
-    # Create portfolio returns column
-    returns["Portfolio"] = returns.dot(weights)
-
-    # Calculate cumulative returns
-    daily_cum_ret = (1 + returns).cumprod()
-
-    # https: // campus.datacamp.com / courses / introduction - to - portfolio - analysis - in -python / introduction - to - portfolio - analysis?ex = 9
-    # Get percentage daily returns
-    daily_returns = data.pct_change()
-
-    # Calculate the covariance matrix
-    cov_matrix = (daily_returns.cov()) * 250
-
-    # Calculate the portfolio variance
-    port_variance = np.dot(weights.T, np.dot(cov_matrix, weights))
-
-    # https: // campus.datacamp.com / courses / introduction - to - portfolio - analysis - in -python / introduction - to - portfolio - analysis?ex = 10
-    # Calculate the standard deviation by taking the square root
-    port_standard_dev = np.sqrt(np.dot(weights.T, np.dot(cov_matrix, weights)))
+    daily_cum_ret = portfolio_cumulative_returns(weights, data)
+    port_return = portfolio_return(weights, data)
+    port_variance = portfolio_variance(weights, data)
+    port_standard_dev = portfolio_standard_dev(weights, data)
 
     # --------------------------------------------------------------------------------
     # 3. Display the results
