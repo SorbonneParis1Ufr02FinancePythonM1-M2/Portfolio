@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+portfolio = {"GE": 0.5, "JPM": 0.2, "MSFT": 0.2, "PG": 0.1}
+
 
 def get_data():
     return pd.read_csv(
@@ -12,4 +14,4 @@ def get_data():
 
 
 def get_weights() -> np.array:
-    return np.array([0.5, 0.2, 0.2, 0.1])
+    return np.array(list(portfolio.values()))
