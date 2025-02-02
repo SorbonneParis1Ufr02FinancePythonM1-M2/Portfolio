@@ -1,17 +1,29 @@
+import os
+from typing import Dict
+
 import numpy as np
 import yfinance as yf
 
-portfolio = {"GE": 0.5, "JPM": 0.2, "MSFT": 0.2, "PG": 0.1}
-field_to_keep = "Close"
-begin_date = "2015-01-02"
-end_date = "2018-03-27"
+from constants import CONFIG_FILE
+from helpers_serialize import get_serialized_data
 
 
-def get_data():
-    tickers = list(portfolio.keys())
-    data = yf.download(tickers, start=begin_date, end=end_date)
-    return data[field_to_keep]
+def get_config() -> Dict:
+    path: str = os.path.join(os.getcwd(), CONFIG_FILE)
+    return get_serialized_data(path)
 
 
 def get_weights() -> np.array:
-    return np.array(list(portfolio.values()))
+    config: Dict = get_config()
+    return np.array(list(config["portfolio"].values()))
+
+
+def get_data():
+    config: Dict = get_config()
+    tickers = list(config["portfolio"].keys())
+    data = yf.download(
+        tickers,
+        start=config["initialisation"]["begin_date"],
+        end=config["initialisation"]["end_date"],
+    )
+    return data[config["initialisation"]["field_to_keep"]]
